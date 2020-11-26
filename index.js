@@ -34,6 +34,10 @@ const intialState = {
 }
 
 //Here we don mutate the state object we return new object
+
+//in the long run when we have multiple product to sell 
+//this function will become one huge function
+//difficult to maintain and debug
 const reducer = (state = intialState, action) => {
     switch(action.type){
         case BUY_CAKE : return {
