@@ -1,6 +1,10 @@
 const redux = require('redux');
+const reduxLogger = require('redux-logger');
+
 const createStore = redux.createStore;
 const combineReducers = redux.combineReducers;
+const logger = reduxLogger.createLogger();
+const applyMiddleware = redux.applyMiddleware;
 
 const BUY_CAKE = 'BUY_CAKE';
 const BUY_ICECREAM = 'BUY_ICECREAM';
@@ -46,7 +50,6 @@ const intialIceCreamState = {
 
 //so we have kept two reduce one for each item
 const cakeReducer = (state = intialCakeState, action) => {
-    console.log("cakeReducer");
     switch(action.type){
         case BUY_CAKE : return {
             //it is safe to first create the copy of state object and 
@@ -59,8 +62,6 @@ const cakeReducer = (state = intialCakeState, action) => {
 }
 
 const iceCreamReducer = (state = intialIceCreamState, action) => {
-    console.log("iceCreamReducer");
-
     switch(action.type){
         case BUY_ICECREAM : return {
             //it is safe to first create the copy of state object and 
@@ -81,7 +82,7 @@ const rootReducer = combineReducers({
     cake: cakeReducer,
     iceCream: iceCreamReducer
 });
-const store = createStore(rootReducer);
+const store = createStore(rootReducer,applyMiddleware(logger));
 console.log("Intial state : ",store.getState());
 
 //subscribers are like stakeholders of the store to whom
@@ -90,7 +91,9 @@ console.log("Intial state : ",store.getState());
 
 //store.subscribe accepts a function where a particular stake holder specify what he
 //wanna do with updated application state
-const unSubscribe = store.subscribe(() => console.log("Updated State: ",store.getState()));
+const unSubscribe = store.subscribe(() => {
+
+});
 
 //customer 1
 store.dispatch(buyCake());
