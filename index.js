@@ -1,5 +1,6 @@
 const redux = require('redux');
 const createStore = redux.createStore;
+const combineReducers = redux.combineReducers;
 
 const BUY_CAKE = 'BUY_CAKE';
 const BUY_ICECREAM = 'BUY_ICECREAM';
@@ -27,18 +28,25 @@ const buyIceCream = () => {
 
 //reducer
 //(previousState,action) => newState
+const intialCakeState = {
+    numOfCakes : 10
+}
 
-const intialState = {
-    numOfCakes : 10,
+const intialIceCreamState = {
     numOfIceCream: 20
 }
+
 
 //Here we don mutate the state object we return new object
 
 //in the long run when we have multiple product to sell 
 //this function will become one huge function
 //difficult to maintain and debug
-const reducer = (state = intialState, action) => {
+
+
+//so we have kept two reduce one for each item
+const cakeReducer = (state = intialCakeState, action) => {
+    console.log("cakeReducer");
     switch(action.type){
         case BUY_CAKE : return {
             //it is safe to first create the copy of state object and 
@@ -46,14 +54,20 @@ const reducer = (state = intialState, action) => {
             ...state,    
             numOfCakes : state.numOfCakes -1
         }
+        default : return state
+    }
+}
 
+const iceCreamReducer = (state = intialIceCreamState, action) => {
+    console.log("iceCreamReducer");
+
+    switch(action.type){
         case BUY_ICECREAM : return {
             //it is safe to first create the copy of state object and 
             //then change only the properties that need to be changed
             ...state,    
             numOfIceCream : state.numOfIceCream -1
         }
-
         default : return state
     }
 }
@@ -62,7 +76,12 @@ const reducer = (state = intialState, action) => {
 //who can tell us what are all the customer who visited the shop 
 //and how no. of cakes that intial state changed to current no. of cakes that is
 //current state
-const store = createStore(reducer);
+
+const rootReducer = combineReducers({
+    cake: cakeReducer,
+    iceCream: iceCreamReducer
+});
+const store = createStore(rootReducer);
 console.log("Intial state : ",store.getState());
 
 //subscribers are like stakeholders of the store to whom
